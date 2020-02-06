@@ -28,10 +28,10 @@ namespace SlackExchange.API.Controllers
         public async Task<IActionResult> Register(UserForRegisterDto userForRegisterDto)
         {
             // Alternativa al decorare il controller con [ApiController] (aggiungere anche [fromBody] davanti al parametro della richiesta)
-            //if(!ModelState.IsValid)
-            //    return BadRequest(ModelState);
+            // if(!ModelState.IsValid)
+            //     return BadRequest(ModelState);
 
-            //validate request
+            // validate request
             userForRegisterDto.Username = userForRegisterDto.Username.ToLower();
 
             if (await _repo.UserExists(userForRegisterDto.Username))
@@ -56,10 +56,9 @@ namespace SlackExchange.API.Controllers
             if (userFromRepo == null)
                 return Unauthorized();
 
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.NameIdentifier, userFromRepo.Id.ToString()),
-                new Claim(ClaimTypes.Name, userFromRepo.Username)
+            var claims = new[] {
+                new Claim (ClaimTypes.NameIdentifier, userFromRepo.Id.ToString ()),
+                new Claim (ClaimTypes.Name, userFromRepo.Username)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
@@ -77,7 +76,8 @@ namespace SlackExchange.API.Controllers
 
             var token = tokenHandlder.CreateToken(tokenDescriptor);
 
-            return Ok(new {
+            return Ok(new
+            {
                 token = tokenHandlder.WriteToken(token)
             });
         }
